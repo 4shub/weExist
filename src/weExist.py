@@ -8,6 +8,7 @@ import httplib2
 import os
 import re
 import time
+import sys
 import base64
 
 from apiclient import discovery
@@ -41,7 +42,7 @@ def get_credentials():
     store = Storage(credential_path)
     credentials = store.get()
     if not credentials or credentials.invalid:
-        print('Your credentials are invalid, please run "python ./src/auth.py!")
+        print('Your credentials are invalid, please run "python ./src/auth.py!"')
     return credentials
 
 def create_message(sender, to, subject, message_text):
@@ -67,7 +68,7 @@ def main():
     service = discovery.build('gmail', 'v1', http=http)
 
     email_list = sys.argv[1];
-    email_template = open('message.txt', 'r').read()
+    email_template = open('./src/assets/message.txt', 'r').read()
 
     email_subject = "Greetings! Quick Question?";
 

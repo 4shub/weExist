@@ -8,7 +8,6 @@ import httplib2
 import os
 import re
 import time
-import sys
 import base64
 
 from apiclient import discovery
@@ -25,6 +24,11 @@ SCOPES = 'https://mail.google.com/'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Gmail API Python Quickstart'
 
+try:
+    import argparse
+    flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
+except ImportError:
+    flags = None
 
 def get_credentials():
     home_dir = os.path.expanduser('~')
@@ -45,23 +49,6 @@ def get_credentials():
             credentials = tools.run(flow, store)
         print('Storing credentials to ' + credential_path)
     return credentials
-
-def create_message(sender, to, subject, message_text):
-  message = MIMEText(message_text, 'html')
-  message['to'] = to
-  message['from'] = sender
-  message['subject'] = subject
-  return {'raw': base64.urlsafe_b64encode(message.as_string())}
-
-def send_message(service, user_id, message):
-  try:
-    message = (service.users().messages().send(userId=user_id, body=message)
-               .execute())
-    print ('Message Id: %s' % message['id'])
-    return message
-  except errors.HttpError, error:
-    print ('An error occurred: %s' % error)
-
 
 def main():
     credentials = get_credentials()
